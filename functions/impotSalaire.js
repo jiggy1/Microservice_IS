@@ -1,17 +1,18 @@
 
 function impotSalaire(montantBrut) {
-    
+    let montantIS = 0;
 
     if (montantBrut <= 300000) {
-        let montantImpot = 0;
+        montantIS = 0;
+
     } else {
         let montantBrutImposable = Math.round(montantBrut - 300000);
 
         let baseImpot =  Math.round(montantBrutImposable);
 
-        montantImpot = Math.round(baseImpot * 0.012);
+        montantIS = Math.round(baseImpot * 0.012);
     }
-    return montantImpot;
+    return montantIS;
 }
 
 module.exports = impotSalaire;

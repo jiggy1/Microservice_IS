@@ -5,7 +5,7 @@ const impotSalaire = require('./functions/impotSalaire');
 
 const app = express();
 
-const PORT = 8000
+const PORT = 8001;
 
 // log request
 app.use(morgan('tiny'));
@@ -17,28 +17,29 @@ var url = "mongodb://localhost:27017/";
 // parse request 
 app.use(express.urlencoded({extended: true}));
 
-app.set('view engine', 'ejs');
 
-app.get('/:id', (req, res) => {
+
+app.get('/api/microservice-is/:AS_ID', (req, res) => {
      MongoClient.connect(url, {useUnifiedTopology: true}, function(err, db) {
         if (err) throw err;
         var dbo = db.db("Microservice_is");
-        const id = parseInt(req.params.id);
+        const AS_ID = parseInt(req.params.AS_ID);
         dbo.collection("assures").findOne({
-            id: id
+            AS_ID: AS_ID
         },
+        
         function(err, result) {
             if (err) throw err;
 
             if (result) {
-                let {nom, montant_brut, id} = result;
-                let montant_impot = impotSalaire(montant_brut);
+                let {AS_NOM, MONTANT_BRUT, AS_ID} = result;
+                let montant_impot = impotSalaire(MONTANT_BRUT);
                 res.json({
                     'status': 200,
                     'result': {
-                        'id': id,
-                        'nom': nom,
-                        'montant brut': montant_brut,
+                        'AS_ID': AS_ID,
+                        'nom': AS_NOM,
+                        'montant brut': MONTANT_BRUT,
                         'montant impot': montant_impot
                     }
                 })
@@ -48,7 +49,7 @@ app.get('/:id', (req, res) => {
                     'result': null
                 })
             }
-            
+            console.log(typeof AS_ID)
             db.close();
         });
     });
